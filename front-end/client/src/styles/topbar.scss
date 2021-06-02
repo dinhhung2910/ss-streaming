@@ -1,0 +1,28 @@
+#topbar {
+  z-index: 11;
+  width: -webkit-fill-available; 
+}
+
+#topbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: 22.5pt;
+	padding-bottom: 0;
+	padding-right: 22.5pt;
+	padding-top: 7.5pt;
+	
+
+	&.large-bottom {
+		padding-bottom: 7.5pt;
+	}
+
+	&.home {
+		position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    height: 60px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+	}
+}

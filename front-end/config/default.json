@@ -1,0 +1,7 @@
+{
+  "mongoURI": "mongodb://admin:incorrect@localhost:27017/stream",
+  "mailUsername": "hung.dm161925@sis.hust.edu.vn",
+  "mailPassword": "Dinhhung2910",
+  "baseUrl": "",
+  "jwtSecret": "abc"
+}

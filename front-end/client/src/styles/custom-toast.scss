@@ -1,0 +1,117 @@
+/*
+// Used to define container behavior: width, position: fixed etc... 
+.Toastify__toast-container {
+}
+
+// Used to define the position of the ToastContainer
+.Toastify__toast-container--top-left {
+}
+.Toastify__toast-container--top-center {
+}
+.Toastify__toast-container--top-right {
+}
+.Toastify__toast-container--bottom-left {
+}
+.Toastify__toast-container--bottom-center {
+}
+.Toastify__toast-container--bottom-right {
+}
+*/
+
+// Classes for the displayed toast
+.Toastify__toast {
+  font-family: inherit;
+  border-radius: 6pt;
+  padding-left: 16px;
+  font-size: 0.9em;
+  min-height: 54px;
+  box-shadow: rgba(0, 0, 0, 0.176) 0px 3px 8px;
+}
+
+/*
+.Toastify__toast--rtl {
+}
+.Toastify__toast--dark {
+}
+.Toastify__toast--default {
+}
+.Toastify__toast--info {
+}
+*/
+
+.Toastify__toast--success {
+  background:rgb(227, 252, 239);
+  color:rgb(0, 102, 68);
+
+  .Toastify__close-button {
+    color:rgb(0, 102, 68);
+  }
+
+  .Toastify__progress-bar {
+    background-color: rgb(54, 179, 126);
+  }
+}
+
+.Toastify__toast--warning {
+  background:rgb(255, 250, 230);
+  color:rgb(255, 139, 0);
+
+  .Toastify__close-button {
+    color:rgb(255, 139, 0);
+  }
+
+  .Toastify__progress-bar {
+    background-color:rgb(255, 171, 0);
+  }
+}
+
+.Toastify__toast--error {
+  background: rgb(255, 235, 230);
+  color: rgb(191, 38, 0);
+
+  .Toastify__close-button {
+    color: rgb(191, 38, 0);
+  }
+
+  .Toastify__progress-bar {
+    background-color: rgb(255, 86, 48);
+  }
+}
+
+
+.Toastify__toast-body {
+  // To support multiple lines
+  white-space: pre-line;
+
+}
+
+/** Classes for the close button. Better use your own closeButton **/
+.Toastify__close-button {
+  margin-right: 2px;
+  margin-top: 2px;
+}
+
+/*
+.Toastify__close-button--default {
+}
+.Toastify__close-button > svg {
+}
+.Toastify__close-button:hover, .Toastify__close-button:focus {
+}
+*/
+
+/** Classes for the progress bar **/
+.Toastify__progress-bar {
+  bottom: -1px;
+}
+/*
+.Toastify__progress-bar--animated {
+}
+.Toastify__progress-bar--controlled {
+}
+.Toastify__progress-bar--rtl {
+}
+.Toastify__progress-bar--default {
+}
+.Toastify__progress-bar--dark {
+}*/
