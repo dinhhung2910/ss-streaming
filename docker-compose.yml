@@ -15,6 +15,10 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: incorrect
+    networks: 
+      bridge:
+        aliases:
+          - mongo
 
   mongo-express:
     image: mongo-express
@@ -40,7 +44,7 @@ services:
   kafka:
     image: wurstmeister/kafka:latest
     ports: 
-      - 9092:9092
+      - 29092:29092
       - 32181:32181
     depends_on:
       - zookeeper
@@ -48,9 +52,13 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_HOST_NAME: 0.0.0.0
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       JMX_PORT: 9999
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     networks:
       bridge:
         aliases:
@@ -66,23 +74,23 @@ services:
     networks:
       - bridge
 
-  kafka-producer:
-    image: kafka-spark-flink-example
-    depends_on:
-      - kafka
-    environment:
-      EXAMPLE_GOAL: "producer"
-      EXAMPLE_KAFKA_TOPIC: "example"
-      EXAMPLE_KAFKA_SERVER: "kafka:9092"
-      EXAMPLE_ZOOKEEPER_SERVER: "zookeeper:32181"
-      EXAMPLE_PRODUCER_INTERVAL: 100
-    networks:
-      - bridge
+  # kafka-producer:
+  #   image: kafka-spark-flink-example
+  #   depends_on:
+  #     - kafka
+  #   environment:
+  #     EXAMPLE_GOAL: "producer"
+  #     EXAMPLE_KAFKA_TOPIC: "example"
+  #     EXAMPLE_KAFKA_SERVER: "kafka:9092"
+  #     EXAMPLE_ZOOKEEPER_SERVER: "zookeeper:32181"
+  #     EXAMPLE_PRODUCER_INTERVAL: 100
+  #   networks:
+  #     - bridge
 
   kafka-consumer-kafka:
       image: kafka-spark-flink-example
       depends_on:
-        - kafka-producer
+        - kafka
       environment:
         EXAMPLE_GOAL: "consumer.kafka"
         EXAMPLE_KAFKA_TOPIC: "example"
@@ -94,7 +102,7 @@ services:
   kafka-consumer-spark:
         image: kafka-spark-flink-example
         depends_on:
-          - kafka-producer
+          - kafka
         ports:
           - 4040:4040
         environment:
@@ -108,11 +116,42 @@ services:
   kafka-consumer-flink:
         image: kafka-spark-flink-example
         depends_on:
-          - kafka-producer
+          - kafka
+          - elasticsearch
         environment:
           EXAMPLE_GOAL: "consumer.flink"
           EXAMPLE_KAFKA_TOPIC: "example"
           EXAMPLE_KAFKA_SERVER: "kafka:9092"
           EXAMPLE_ZOOKEEPER_SERVER: "zookeeper:32181"
+          EXAMPLE_ELASTIC_SERVER: "elasticsearch"
+          EXAMPLE_MONGODB_SERVER: "mongo"
         networks:
+          - bridge
+
+  elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+        environment:
+          - cluster.name=docker-cluster
+          - bootstrap.memory_lock=true
+          - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+          - discovery.type=single-node
+        ports:
+          - "9200:9200"
+          - "9300:9300"
+        ulimits:
+          memlock:
+            soft: -1
+            hard: -1
+          nofile:
+            soft: 65536
+            hard: 65536
+        networks: 
+          bridge:
+            aliases:
+              - elasticsearch
+  kibana:
+        image: docker.elastic.co/kibana/kibana:7.6.0
+        ports:
+          - "5601:5601"
+        networks: 
           - bridge

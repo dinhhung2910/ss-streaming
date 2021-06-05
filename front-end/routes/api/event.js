@@ -1,11 +1,23 @@
+/* eslint-disable max-len */
 const express = require('express');
-const {produce} = require('../../kafka/produces');
+const {send} = require('../../kafka/produces');
 
 const eventRouter = new express.Router();
 
 eventRouter.post('/', (req, res) => {
   try {
-    produce(req.body);
+    const {
+      timestamp,
+      userId,
+      productId,
+      isEnter,
+      length,
+    } = req.body.value;
+
+    const eventString = `${userId} ${timestamp} ${productId} ${isEnter} ${length}`;
+
+    send(eventString);
+
     res.status(200).send(true);
   } catch (e) {
     console.error(e);
